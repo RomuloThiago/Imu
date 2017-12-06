@@ -46,19 +46,14 @@ vector<float> Imu::defineattitude(float Ax, float Ay, float Az)
 	ay =Ay/mod;
 	az =Az/mod;
 
-	if (!(rotationorder.compare("xyz"))) //return 0 if the string rotation order is equal to 'xyz'
-	{
-		rotationxyz();
-	}	
-	else if (!(rotationorder.compare("yxz"))) //return 0 if the string rotation order is equal to 'yxz'
+	if (!(rotationorder.compare("yxz"))) //return 0 if the string rotation order is equal to 'yxz'
 	{
 		rotationyxz();
 	}	
 	else
 	{
-		cout<<"Error: The rotation order provided is not correct, the rotation allowed are xyz and yxz"<<endl; 
-		abort();
-	}
+		rotationxyz(); //standard rotation sequence
+	}	
 
 	vector<float> x;
 	x.push_back(roll);

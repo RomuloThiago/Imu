@@ -17,7 +17,7 @@ void calculaterollpitch(string filename, string rotation, string filenameout)
 		storagevec[2].push_back(angles[1]);
 	}
 	writefile(filenameout, storagevec);
-	cout<<"The program extracted the accelerations in "<<filename<<", estimated the angles roll and pitch in "<<rotation<<" rotation sequence and stored in "<<filenameout<<", with the following configuration: timestamp [s], roll [degree], pitch [degree]"<<endl;
+	cout<<"The program extracted the accelerations in "<<filename<<", estimated the angles roll and pitch in "<<rotation<<" rotation sequence and stored in "<<filenameout<<", with the following configuration: timestamp [ms], roll [degree], pitch [degree]"<<endl;
 }
 
 void calculateanglebetween2vec(string filename1, string filename2, string filenameout)
@@ -58,7 +58,7 @@ void calculateanglebetween2vec(string filename1, string filename2, string filena
  	writefile(filenameout, storagevec);
  	if(filename2!="")
  		filename2.insert(0," and ");
- 	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the angle between the two accelerations, and stored in "<<filenameout<<", with the following configuration: timestamp [s], angle [degree]"<<endl;
+ 	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the angle between the two accelerations, and stored in "<<filenameout<<", with the following configuration: timestamp [ms], angle [degree]"<<endl;
 
 }
 
@@ -101,7 +101,7 @@ vector<vector<float> >sinc(vector<vector<float> > x, vector<vector<float> > y)
 		{
 			i+=1;
 			j+=1;
-			//TODO	
+			//TO DO	
 		}
 	}
 	writefile("sinc.log",transpose(result));
@@ -147,14 +147,12 @@ vector < vector < float> >readfile(string filename)
 		}
 		if(p[0].size() == 0)
 		{
-		 	cout<<"Error: The file "<<filename<<" is empty."<<endl;
-		 	abort();			
+		 	cout<<"Error: The file "<<filename<<" is empty."<<endl;		
 		}
 	}
 	else
 	{
 		cout<<"Error: The file input "<<filename<<" was not open."<<endl;
-		abort();
 	}
 	read.close();
 	return p;
@@ -185,7 +183,6 @@ void writefile(string filenameout, vector < vector < float> > data)
 	{
 		cout<<"Error: The output file could not be created."<<endl;
 		outfile.close();
-		abort();
 	}
 	outfile.close();
 }
@@ -214,7 +211,6 @@ void writefilestr(string filenameout, vector < vector < string> > data)
 	{
 		cout<<"Error: The output file could not be created."<<endl;
 		outfile.close();
-		abort();
 	}
 	outfile.close();
 }
@@ -272,20 +268,39 @@ void organizeinput(int argc, char * argv [])
 				}
 				if(parameter[1]=="calculate_angle_between2vec")
 				{
-					string file2 = ""; //standard rotation sequence
+					string file2 = "";
 					if(assign[3])
 						file2 = parameter[3];	 
 					calculateanglebetween2vec(parameter[2],file2,parameter[4]);
+				}
+				if(parameter[1]=="calculate_tilt_angle")
+				{
+					calculatetiltang(parameter[2],parameter[4]);
 				}
 
 			}
 			else
 				cout<<"Error: It was not provided the input file name."<<endl;
 			
-			//cout<<parameter[1]<<parameter[2]<<parameter[3]<<parameter[4]<<endl;
 }
 
 vector < vector <float> >lowpassfilter(vector < vector <float> >, float wc )
 {
 	//TO DO
+}
+
+void calculatetiltang(string filename1, string filenameout)
+{
+	float angle;
+	vector < vector < float> > storagevec(2);
+	Imu imu;
+ 	vector < vector < float > > x = readfile(filename1); //receives the vector of timestamp, acceleration in x, acceleration in y and acceleration in z
+ 	for (int i = 0; i < x[0].size();i++)
+ 	{
+	 	angle = imu.calculatetiltangle(x[1][i], x[2][i], x[3][i]);		
+	 	storagevec[0].push_back(x[0][i]);
+	 	storagevec[1].push_back(angle);
+ 	}
+ 	writefile(filenameout, storagevec);
+ 	cout<<"The program extracted the accelerations in "<<filename1<<", estimated the tilt angle and stored in "<<filenameout<<", with the following configuration: timestamp [ms], angle [degree]"<<endl;
 }

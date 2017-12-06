@@ -34,11 +34,11 @@ public:
 	float getaccelerationz();	//return acceleration in z [g]
 	float getaroll(); 	//return roll angle [degree]
 	float getpitch();	//return pitch angle [degree]
-	vector<float> defineattitude(float Ax,float Ay, float Az); //calculate attitude, calling rotationxyz() or rotationyxz() and returning roll and pitch
-	float anglebetween(float Ax,float Ay,float Az,float Bx,float By,float Bz); //return the angle between vector a and b in degrees
-	float calculatetiltangle(float Ax, float Ay, float Az); //calculate the angle between the gravity and the z axis of the body 
-	vector <float> normalvector(float Ax,float Ay,float Az,float Bx,float By,float Bz); //calcuate the normal vector between two vectors
-	string screen(float Ax, float Ay, float Az);//return the transition based in the acceleration axes
+	vector<float> defineattitude(float Ax,float Ay, float Az); //calculate attitude, calling rotationxyz() or rotationyxz() and returning roll and pitch [degree]
+	float anglebetween(float Ax,float Ay,float Az,float Bx,float By,float Bz); //return the angle between vector a and b [degree]
+	float calculatetiltangle(float Ax, float Ay, float Az); //calculate the angle between the gravity and the z axis of the body [degree]
+	vector <float> normalvector(float Ax,float Ay,float Az,float Bx,float By,float Bz); //calcuate the normal vector between two vectors [x , y, z]
+	string screen(float Ax, float Ay, float Az);//return the transition based in the acceleration axes [string]
 
 };	
 #endif /* IMU_H */
