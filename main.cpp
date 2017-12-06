@@ -1,7 +1,7 @@
 #include "imu.h"
 #include "functions.h"
 /*
-Purpose: Calculate roll and pitch and tilt angle from accelerometer data, calculate angle and normal vector between two accelerometer data
+Purpose: Calculate roll, pitch and tilt angle from accelerometer data, calculate angle and normal vector between two accelerometer data
 and define screen rotation using accelerometer. The functions are based on the approach of [1].
 
 @author Romulo S. Rosa
@@ -11,7 +11,7 @@ Reference:
 [1] PEDLEY, M. Tilt sensing using a three-axis accelerometer.Freescale semi-conductor application note, v. 1, p. 2012–2013, 2013
 */
 
-int main(int argc, char * argv []) //receive the argument from terminal or from user input, the program will work until a end command
+int main(int argc, char * argv []) //receive the argument from terminal or from user input, the program will work until a exit command
 {
 	string aux;
 	char **input = new char*[20];

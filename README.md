@@ -6,29 +6,45 @@ The present project follows the work of [1].
 	Freescale semi-conductor application note, v. 1, p. 2012–2013, 2013.
 
 ### Content
-- [Usage](#usage)
+- [Calculate roll and pitch using accelerometer data](#Calculate roll and pitch using accelerometer data (function calculate_roll_and_pitch))
 
-### Usage
+- [exit](#exit)
 
+### Calculate roll and pitch using accelerometer data (function calculate_roll_and_pitch)
 
-*Calculate roll and pitch using accelerometer data (function calculate_roll_and_pitch)
-function calculate_roll_and_pitch(string file_in)
-function calculate_roll_and_pitch(string file_in, string aditional_parameter)
-function calculate_roll_and_pitch(string file_in, string aditional_parameter, string file_out)
-aditional_parameter (Optional) - The sequence rotation, accepted values are xyz or yxz. The stantandard value to this atribute is xyz
-file_in (Required) - Name of the file which the acceleration data will be read, it must be in the following pattern [timestamp; aceleration in x; aceleration in y; aceleration in z], the standard location of file_in is Data/ 
-file_out (Optional)   Name of the file which the angles will be stored, it has the following pattern  [timestamp; roll; pitch]. The standard location of file_out is Data/ 
+function calculate_roll_and_pitch(string file_in)__
+function calculate_roll_and_pitch(string file_in, string aditional_parameter)__
+function calculate_roll_and_pitch(string file_in, string aditional_parameter, string file_out)__
+aditional_parameter (Optional) - The sequence rotation, accepted values are xyz or yxz. The stantandard value to this atribute is xyz__
+file_in (Required) - Name of the file which the acceleration data will be read, it must be in the following pattern [timestamp; aceleration in x; aceleration in y; aceleration in z], the standard location of file_in is Data/ __
+file_out (Optional)   Name of the file which the angles will be stored, it has the following pattern  [timestamp; roll; pitch]. The standard location of file_out is Data/ __
 Compiling:
 ```markdown
-$ g++ -std=gnu++11 main.cpp imu.cpp functions.cpp -o programa 
+$ g++ -std=gnu++11 main.cpp imu.cpp functions.cpp -o program
 ```
 Execution:
 ```markdown
-$ ./program function=calculate_roll_and_pitch file_in=attitude_exam.log file_out=attitude_out.log
+$ ./program function=calculate_roll_and_pitch file_in=attitude_exam.log file_out=attitude_out.log aditional_parameter=yxz
 ```
 or
 ```markdown
 $./programa
 Enter the desired command:
-function=calculate_roll_and_pitch file_in=attitude_exam.log file_out=attitude_out.log
+function=calculate_roll_and_pitch file_in=attitude_exam.log file_out=attitude_out.log aditional_parameter=yxz
+```
+### exit
+Para a execção do programa__
+Compiling:
+```markdown
+$ g++ -std=gnu++11 main.cpp imu.cpp functions.cpp -o program
+```
+Execution:
+```markdown
+$ ./program exit
+```
+or
+```markdown
+$./programa
+Enter the desired command:
+exit
 ```
