@@ -20,7 +20,7 @@ void calculaterollpitch(string filename, string rotation, string filenameout)
 	cout<<"The program extracted the accelerations in "<<filename<<", estimated the angles roll and pitch in "<<rotation<<" rotation sequence and stored in "<<filenameout<<", with the following configuration: timestamp [s], roll [degree], pitch [degree]"<<endl;
 }
 
-void f2(string filename1, string filename2, string filenameout)
+void calculateanglebetween2vec(string filename1, string filename2, string filenameout)
 {
 	float angle;
 	vector < vector < float> > storagevec(2);
@@ -40,17 +40,15 @@ void f2(string filename1, string filename2, string filenameout)
  			diff += x[0][i] - y[0][i];
  		}
  		if(x.size() == 7) //in case which the input is timestamp, ax, ay, az, bx, by, bz (same timestamp, there is no need to sincronize)
- 		{
  			diff = 0;
- 		}
  	}
- 	else
+	else
  		y = readfile(filename2);
- 	//diff = x[0].size()*11; //REMOVE AFTER TEST THE FUNCTION SINC
- 	if(diff/x[0].size() > 10 || x[0].size()!=y[0].size())
+  	//diff = x[0].size()*11; //TO DO SINC FUNCTION
+ 	/*if(diff/x[0].size() > 10 || x[0].size()!=y[0].size())
  	{
  		vector < vector < float > > result = sinc(x,y);
- 	}
+ 	}*/
  	for (int i = 0; i < x[0].size();i++)
  	{
 	 	angle = imu.anglebetween(x[1][i], x[2][i], x[3][i], y[1][i], y[2][i], y[3][i]);		
@@ -58,7 +56,10 @@ void f2(string filename1, string filename2, string filenameout)
 	 	storagevec[1].push_back(angle);
  	}
  	writefile(filenameout, storagevec);
- 	cout<<"The program extracted the accelerations in "<<filename1<<" and "<<filename2<<", estimated the angle between the two accelerations, and stored in "<<filenameout<<", with the following configuration: timestamp [s], angle [degree]"<<endl;
+ 	if(filename2!="")
+ 		filename2.insert(0," and ");
+ 	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the angle between the two accelerations, and stored in "<<filenameout<<", with the following configuration: timestamp [s], angle [degree]"<<endl;
+
 }
 
 vector<vector<float> >transpose(vector<vector<float> > x)
@@ -258,7 +259,7 @@ void organizeinput(int argc, char * argv [])
 			}
 			if (!assign[4])
 			{
-				parameter[4] = string("standardout.log");
+				parameter[4] = string("standardout.log"); //if file_out name was provided, it is set as standardout.log 
 			}
 			if(assign[2])
 			{	
@@ -268,10 +269,18 @@ void organizeinput(int argc, char * argv [])
 					if(assign[5])
 						rotation = parameter[5];	 
 					calculaterollpitch(parameter[2],rotation,parameter[4]);
-					}
 				}
-				else
-					cout<<"Error: It was not provided the input file name."<<endl;
+				if(parameter[1]=="calculate_angle_between2vec")
+				{
+					string file2 = ""; //standard rotation sequence
+					if(assign[3])
+						file2 = parameter[3];	 
+					calculateanglebetween2vec(parameter[2],file2,parameter[4]);
+				}
+
+			}
+			else
+				cout<<"Error: It was not provided the input file name."<<endl;
 			
 			//cout<<parameter[1]<<parameter[2]<<parameter[3]<<parameter[4]<<endl;
 }
