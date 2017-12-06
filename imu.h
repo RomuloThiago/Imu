@@ -1,6 +1,5 @@
 #ifndef IMU_H
 #define IMU_H
-#include "functions.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,6 +9,7 @@
 using namespace std;
 #define PI 3.14159265
 #define mu 0.01
+#include "functions.h"
 
 class Imu
 {
