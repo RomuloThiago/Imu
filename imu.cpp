@@ -88,7 +88,7 @@ vector <float> Imu::normalvector(float Ax, float Ay, float Az, float Bx, float B
 	return normal;
 }
 
-string Imu::Screen(float Ax, float Ay, float Az)
+string Imu::screen(float Ax, float Ay, float Az)
 {
 	float mod = sqrt(Ax*Ax + Ay*Ay + Az*Az);
 	if(Az/mod < 0.5)

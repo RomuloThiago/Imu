@@ -2,7 +2,7 @@
 #include "functions.h"
 #include <algorithm>
 
-void f1(string filename, string rotation, string filenameout)
+void calculaterollpitch(string filename, string rotation, string filenameout)
 {
 	vector < float> angles;
 	vector < vector < float> > storagevec(3);
@@ -46,7 +46,7 @@ void f2(string filename1, string filename2, string filenameout)
  	}
  	else
  		y = readfile(filename2);
- 	diff = x[0].size()*11; //REMOVE AFTER TEST THE FUNCTION SINC
+ 	//diff = x[0].size()*11; //REMOVE AFTER TEST THE FUNCTION SINC
  	if(diff/x[0].size() > 10 || x[0].size()!=y[0].size())
  	{
  		vector < vector < float > > result = sinc(x,y);
@@ -99,7 +99,8 @@ vector<vector<float> >sinc(vector<vector<float> > x, vector<vector<float> > y)
 		else
 		{
 			i+=1;
-			j+=1;	
+			j+=1;
+			//TODO	
 		}
 	}
 	writefile("sinc.log",transpose(result));
@@ -175,7 +176,7 @@ void writefile(string filenameout, vector < vector < float> > data)
 				conv.str(string()); //to clear the stringstream
 				conv.clear();
 			}
-		outfile<<aux.erase(aux.length()-2,aux.length())<<endl; //for removing the last ';'
+		outfile<<aux.erase(aux.length()-2,aux.length())<<endl; //to remove the last ';'
 		aux=string(); //clear aux
 		}
 	}
@@ -204,7 +205,7 @@ void writefilestr(string filenameout, vector < vector < string> > data)
 				conv.str(string()); //to clear the stringstream
 				conv.clear();
 			}
-		outfile<<aux.erase(aux.length()-2,aux.length())<<endl; //for removing the last ';'
+		outfile<<aux.erase(aux.length()-2,aux.length())<<endl; //to remove the last ';'
 		aux=string(); //clear aux
 		}
 	}
@@ -215,4 +216,67 @@ void writefilestr(string filenameout, vector < vector < string> > data)
 		abort();
 	}
 	outfile.close();
+}
+
+void organizeinput(int argc, char * argv [])
+{
+	string aux;
+	vector <string> parameter (6);
+	vector <bool> assign(6);
+	for(int i = 1; i < argc; i++)
+			{
+				aux = string(argv[i]);
+				if(aux=="exit")
+					abort();
+				argv[i] = new char[0]; //clear argv
+				if(aux.substr(0, aux.find('='))=="function" && !assign[1])
+				{
+					parameter[1] = aux.erase(0, aux.find('=') + 1);
+					assign[1] = true;
+				}
+				else if(aux.substr(0, aux.find('='))=="file_in" && !assign[2])
+				{
+					parameter[2] = aux.erase(0, aux.find('=') + 1);
+					assign[2] = true;
+				}
+				else if(aux.substr(0, aux.find('='))=="file_in" && !assign[3])
+				{
+					parameter[3] = aux.erase(0, aux.find('=') + 1);
+					assign[3] = true;
+				}
+				else if(aux.substr(0, aux.find('='))=="file_out" && !assign[4])
+				{
+					parameter[4] = aux.erase(0, aux.find('=') + 1);
+					assign[4] = true;
+				}
+				else if(aux.substr(0, aux.find('='))=="aditional_parameter" && !assign[5])
+				{
+					parameter[5] = aux.erase(0, aux.find('=') + 1);
+					assign[5] = true;
+				}	
+
+			}
+			if (!assign[4])
+			{
+				parameter[4] = string("standardout.log");
+			}
+			if(assign[2])
+			{	
+				if(parameter[1]=="calculate_roll_and_pitch")
+				{
+					string rotation = "xyz"; //standard rotation sequence
+					if(assign[5])
+						rotation = parameter[5];	 
+					calculaterollpitch(parameter[2],rotation,parameter[4]);
+					}
+				}
+				else
+					cout<<"Error: It was not provided the input file name."<<endl;
+			
+			//cout<<parameter[1]<<parameter[2]<<parameter[3]<<parameter[4]<<endl;
+}
+
+vector < vector <float> >lowpassfilter(vector < vector <float> >, float wc )
+{
+	//TO DO
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <string.h>
 #include <math.h>
 #include <fstream>
 #include <sstream>
@@ -37,7 +38,7 @@ public:
 	float anglebetween(float Ax,float Ay,float Az,float Bx,float By,float Bz); //return the angle between vector a and b in degrees
 	float calculatetiltangle(float Ax, float Ay, float Az); //calculate the angle between the gravity and the z axis of the body 
 	vector <float> normalvector(float Ax,float Ay,float Az,float Bx,float By,float Bz); //calcuate the normal vector between two vectors
-	string Screen(float Ax, float Ay, float Az);//return the transition based in the acceleration axes
+	string screen(float Ax, float Ay, float Az);//return the transition based in the acceleration axes
 
 };	
 #endif /* IMU_H */
