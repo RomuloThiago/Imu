@@ -44,11 +44,7 @@ void calculateanglebetween2vec(string filename1, string filename2, string filena
  	}
 	else
  		y = readfile(filename2);
-  	//diff = x[0].size()*11; //TO DO SINC FUNCTION
- 	/*if(diff/x[0].size() > 10 || x[0].size()!=y[0].size())
- 	{
- 		vector < vector < float > > result = sinc(x,y);
- 	}*/
+ 	//SINC TEST
  	for (int i = 0; i < x[0].size();i++)
  	{
 	 	angle = imu.anglebetween(x[1][i], x[2][i], x[3][i], y[1][i], y[2][i], y[3][i]);		
@@ -59,7 +55,7 @@ void calculateanglebetween2vec(string filename1, string filename2, string filena
  	if(filename2!="")
  		filename2.insert(0," and ");
  	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the angle between the two accelerations, and stored in "<<filenameout<<", with the following configuration: timestamp [ms], angle [degree]"<<endl;
-
+ 	
 }
 
 vector<vector<float> >transpose(vector<vector<float> > x)
@@ -78,7 +74,7 @@ vector<vector<float> >transpose(vector<vector<float> > x)
 vector<vector<float> >sinc(vector<vector<float> > x, vector<vector<float> > y)
 {
 	int i = 0, j = 0, k = 0;
-	vector<vector<float> > result; //output sincronized
+	vector<vector<float> > result; //output synchronized
 	result.resize(x[0].size()); //allocate memory
 	vector<vector<float> > xt = transpose(x);
 	vector<vector<float> > yt = transpose(y);
@@ -104,7 +100,7 @@ vector<vector<float> >sinc(vector<vector<float> > x, vector<vector<float> > y)
 			//TO DO	
 		}
 	}
-	writefile("sinc.log",transpose(result));
+	//writefile("sinc.log",transpose(result));
 	return transpose(result);
 }
 

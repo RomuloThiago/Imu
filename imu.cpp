@@ -52,7 +52,8 @@ vector<float> Imu::defineattitude(float Ax, float Ay, float Az)
 	}	
 	else
 	{
-		rotationxyz(); //standard rotation sequence
+		rotationorder = "xyz";
+		rotationxyz();
 	}	
 
 	vector<float> x;

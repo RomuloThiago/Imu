@@ -6,17 +6,17 @@ The present project follows the work of [1].
 	Freescale semi-conductor application note, v. 1, p. 2012–2013, 2013.
 
 ### Content
-- [Calculate roll and pitch using accelerometer data](#Calculate roll and pitch using accelerometer data)
+- [Calculate roll and pitch using accelerometer data](#calculate-roll--and-pitch-using-accelerometer-data)
 
-- [Calculate tilt angle](#Calculate tilt angle)
+- [Calculate tilt angle](#calculate-tilt-angle)
 
-- [Calculate angle between two acceleration vectors data](#Calculate angle between two acceleration vectors data)
+- [Calculate angle between two acceleration vectors data](#calculate-angle-between-two-acceleration-vectors-data)
 
 - [Exit](#exit)
 
 ### Calculate roll and pitch using accelerometer data
 
-Function that calculate roll and pitch using acceleration data.
+Function that calculates roll and pitch using acceleration data.
 
 void calculate_roll_and_pitch(string file_in);
 
@@ -47,7 +47,7 @@ function=calculate_roll_and_pitch file_in=attitude_exam.log file_out=attitude_ou
 
 ### Calculate tilt angle
 
-Calculate the angle between the xy plane normal and the local z axis.
+The function calculates the angle between the xy plane normal and the local z axis.
 
 
 void calculatetiltang(string file_in, string file_out);
@@ -75,11 +75,11 @@ function=calculate_tilt_angle file_in=attitude_exam.log file_out=out.log
 
 ### Calculate angle between two acceleration vectors data
 
-void calculateanglebetween2vec(string file_in, string file_in, string file_out)
+void calculateanglebetween2vec(string file_in, string file_in, string file_out);
 
-void calculateanglebetween2vec(string file_in, string file_in)
+void calculateanglebetween2vec(string file_in, string file_in);
 
-void calculateanglebetween2vec(string file_in)
+void calculateanglebetween2vec(string file_in);
 
 * file_in (Required) - The file in which it will be read the acceleration data a.
 
@@ -104,7 +104,7 @@ function=calculate_angle_between2vec file_in=attitude_exam.log file_in=attitude_
 
 
 ### Exit
-The program waits for a new command until a exit given by the user.
+The function has the objective of end the program by user command. The programm wait a command until an exit is given.
 
 Compiling:
 ```markdown
