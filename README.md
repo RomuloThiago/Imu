@@ -12,11 +12,13 @@ The present project follows the work of [1].
 
 - [Calculate angle between two acceleration vectors data](#calculate-angle-between-two-acceleration-vectors-data)
 
+- [Calculate normal angle of two acceleration vectors data](#Calculate-normal-angle-of-two-acceleration-vectors-data)
+
 - [Exit](#exit)
 
 ### Calculate roll and pitch using accelerometer data
 
-Function that calculates roll and pitch using acceleration data.
+Function that calculates roll and pitch using acceleration data. The data is stored with the following pattern [ms]; roll [degree]; pitch [degree] .
 
 void calculate_roll_and_pitch(string file_in);
 
@@ -26,9 +28,9 @@ void calculate_roll_and_pitch(string file_in, string aditional_parameter, string
 
 * aditional_parameter (Optional) - The sequence rotation, accepted values are xyz or yxz. The standard value to this atribute is xyz.
 
-* file_in (Required) - Name of the file which the acceleration data will be read, it must be in the following pattern [timestamp [ms]; aceleration in x; aceleration in y; aceleration in z], the standard location of file_in is Data/ .
+* file_in (Required) - Name of the file which the acceleration data will be read, it must be in the following pattern [<timestamp> [ms]; aceleration in x; aceleration in y; aceleration in z], the standard location of file_in is Data/ .
 
-* file_out (Optional)   Name of the file which the angles will be stored, it has the following pattern  [timestamp; roll; pitch]. The standard location of file_out is Data/ . The pattern is timestamp [ms]; roll [degree]; pitch [degree] .
+* file_out (Optional)   Name of the file which the angles will be stored, it has the following pattern  [<timestamp>; roll; pitch]. The standard location of file_out is Data/ . 
 
 Compiling:
 ```markdown
@@ -56,7 +58,7 @@ void calculatetiltang(string file_in);
 
 * file_in (Required) - The file in which it will be read gravitational acceleration.
 
-* file_out (Optional) - The name of the file that the output will be stored. The pattern is  timestamp [ms]; angle [degree]
+* file_out (Optional) - The name of the file that the output will be stored. The pattern is  <timestamp> [ms]; <angle> [degree]
 
 Compiling:
 ```markdown
@@ -75,6 +77,9 @@ function=calculate_tilt_angle file_in=attitude_exam.log file_out=out.log
 
 ### Calculate angle between two acceleration vectors data
 
+Calculate angle between two acceleration vectors and record in a file with the following pattern  <timestamp> [ms]; <angle> [degree]
+
+
 void calculateanglebetween2vec(string file_in, string file_in, string file_out);
 
 void calculateanglebetween2vec(string file_in, string file_in);
@@ -83,9 +88,9 @@ void calculateanglebetween2vec(string file_in);
 
 * file_in (Required) - The file in which it will be read the acceleration data a.
 
-* file_in (Optional) - The file in wich it will be rad the acceleration data b. It is optional in case where all the data is in the first file_in, in this specific case the data will be sorted as [timestamp, a<sub>x</sub>, a<sub>y</sub>, a<sub>z</sub> ... b<sub>x</sub>, b<sub>y</sub>, b<sub>z</sub>]. Where a and b are the two acceleration vector.
+* file_in (Optional) - The file in wich it will be rad the acceleration data b. It is optional in case where all the data is in the first file_in, in this specific case the data will be sorted as [<timestamp>, a<sub>x</sub>, a<sub>y</sub>, a<sub>z</sub> ... b<sub>x</sub>, b<sub>y</sub>, b<sub>z</sub>]. Where a and b are the two acceleration vector.
 
-* file_out (Optional) - The name of the file that the output will be stored. The pattern is  timestamp [ms]; angle [degree]
+* file_out (Optional) - The name of the file that the output will be stored.
 
 Compiling:
 ```markdown
@@ -101,7 +106,37 @@ $./programa
 Enter the desired command:
 function=calculate_angle_between2vec file_in=attitude_exam.log file_in=attitude_exam2.log file_out=out.log
 ```
+### Calculate normal angle of two acceleration vectors data
 
+Calculate normal vector two acceleration vectors and record in a file with the following pattern  <timestamp> [ms]; <x>; <y>; <z>
+
+
+void calculatenormalvector(string file_in, string file_in, string file_out);
+
+void calculatenormalvector(string file_in, string file_in);
+
+void calculatenormalvector(string file_in);
+
+* file_in (Required) - The file in which it will be read the acceleration data a.
+
+* file_in (Optional) - The file in wich it will be rad the acceleration data b. It is optional in case where all the data is in the first file_in, in this specific case the data will be sorted as [<timestamp>, a<sub>x</sub>, a<sub>y</sub>, a<sub>z</sub> ... b<sub>x</sub>, b<sub>y</sub>, b<sub>z</sub>]. Where a and b are the two acceleration vector.
+
+* file_out (Optional) - The name of the file that the output will be stored.
+
+Compiling:
+```markdown
+$ g++ -std=gnu++11 main.cpp imu.cpp functions.cpp -o program
+```
+Execution:
+```markdown
+$ ./program function=calculate_normal_vector file_in=attitude_exam.log file_in=attitude_exam2.log file_out=out.log
+```
+or
+```markdown
+$./programa
+Enter the desired command:
+function=calculate_normal_vector file_in=attitude_exam.log file_in=attitude_exam2.log file_out=out.log
+```
 
 ### Exit
 The function has the objective of end the program by user command. The programm wait a command until an exit is given.

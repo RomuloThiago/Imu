@@ -13,6 +13,14 @@ Reference:
 
 int main(int argc, char * argv []) //receive the argument from terminal or from user input, the program will work until a exit command
 {
+/*	string filename1 = "dvl_unsinc.log";
+	string filename2 = "gt_pose_unsinc.log";
+	vector < vector < float > > y = readfile(filename1);
+	vector < vector < float > > x = readfile(filename2);
+	vector < vector < float > > output;
+
+	output = sinc(x,y);*/
+
 	string aux;
 	char **input = new char*[20];
 	int i=1;

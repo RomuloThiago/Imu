@@ -41,10 +41,11 @@ float Imu::getpitch()//return pitch angle
 vector<float> Imu::defineattitude(float Ax, float Ay, float Az)
 {
 	//receive acceleration in x, y and z and return roll and pitch
-	float mod = sqrt(Ax*Ax + Ay*Ay + Az*Az); //convert the acceleration from m/s2 to g
-	ax =Ax/mod;
-	ay =Ay/mod;
-	az =Az/mod;
+	vector <float> A_vector = normalize(Ax, Ay, Az); //normalize(Ax, Ay, Az);
+
+	ax = A_vector[0];
+	ay = A_vector[1];
+	az = A_vector[2];
 
 	if (!(rotationorder.compare("yxz"))) //return 0 if the string rotation order is equal to 'yxz'
 	{
@@ -65,6 +66,7 @@ vector<float> Imu::defineattitude(float Ax, float Ay, float Az)
 
 float Imu::anglebetween(float Ax, float Ay, float Az, float Bx, float By, float Bz) //return the angle between vector a and b in degrees
 {
+
 	float angle = acos((Ax*Bx + Ay*By + Az*Bz)/(sqrt(Ax*Ax + Ay*Ay + Az*Az)*sqrt(Bx*Bx + By*By + Bz*Bz))); //Equation 45 of [1]
 	return angle*180/PI;
 }
@@ -77,19 +79,22 @@ float Imu::calculatetiltangle(float Ax, float Ay, float Az)
 vector <float> Imu::normalvector(float Ax, float Ay, float Az, float Bx, float By, float Bz) //return the normal of two vectors
 {
 	vector <float> normal;
-	float div = (sqrt(Ax*Ax + Ay*Ay + Az*Az)*sqrt(Bx*Bx + By*By + Bz*Bz));
-	normal.push_back(float((Ay*Bz - Az*By)/div));
-	normal.push_back(float((Az*Bx - Ax*Bz)/div));
-	normal.push_back(float((Ax*By - Ay*Bx)/div)); //Equation 47 of [1]
+	vector <float> A_vector = {Ax, Ay, Az}; //normalize(Ax, Ay, Az);
+	vector <float> B_vector = {Bx, By, Bz}; //normalize(Bx, By, Bz);
+	float div = (sqrt(A_vector[0]*A_vector[0] + A_vector[1]*A_vector[1] + A_vector[2]*A_vector[2])*sqrt(B_vector[0]*B_vector[0] + B_vector[1]*B_vector[1] + B_vector[2]*B_vector[2]));
+	normal.push_back(float((A_vector[1]*B_vector[2] - A_vector[2]*B_vector[1])/div));
+	normal.push_back(float((A_vector[2]*B_vector[0] - A_vector[0]*B_vector[2])/div));
+	normal.push_back(float((A_vector[0]*B_vector[1] - A_vector[1]*B_vector[0])/div)); //Equation 47 of [1]
+	return normal;
 	return normal;
 }
 
 string Imu::screen(float Ax, float Ay, float Az)
 {
-	float mod = sqrt(Ax*Ax + Ay*Ay + Az*Az);
-	if(Az/mod < 0.5)
+	vector <float> A_vector = normalize(Ax, Ay, Az);
+	if(A_vector[2] < 0.5)
 	{
-	 	if(Ax/mod < 0.4)
+	 	if(A_vector[0] < 0.4)
 		{
 			if(Ay > 0.5)
 			{
@@ -101,7 +106,7 @@ string Imu::screen(float Ax, float Ay, float Az)
 			}
 
 		}
-		if(Ay/mod < 0.4)
+		if(A_vector[1] < 0.4)
 		{
 			if(Ax > 0.5)
 			{
@@ -114,4 +119,14 @@ string Imu::screen(float Ax, float Ay, float Az)
 		}
 	}
 	return string("Do not change orientation");
+}
+
+vector <float> Imu::normalize(float Ax, float Ay, float Az)
+{
+	vector<float> output;
+	float module = Ax*Ax + Ay*Ay + Az*Az;
+	output.push_back(Ax/module);
+	output.push_back(Ay/module);
+	output.push_back(Az/module);
+	return output;
 }

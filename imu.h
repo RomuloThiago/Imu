@@ -39,6 +39,6 @@ public:
 	float calculatetiltangle(float Ax, float Ay, float Az); //calculate the angle between the gravity and the z axis of the body [degree]
 	vector <float> normalvector(float Ax,float Ay,float Az,float Bx,float By,float Bz); //calcuate the normal vector between two vectors [x , y, z]
 	string screen(float Ax, float Ay, float Az);//return the transition based in the acceleration axes [string]
-
+	vector <float> normalize(float Ax, float Ay, float Az); //return Ax, Ay and Az normalized
 };	
 #endif /* IMU_H */

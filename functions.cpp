@@ -27,24 +27,22 @@ void calculateanglebetween2vec(string filename1, string filename2, string filena
 	vector < vector < float> > y;
 	Imu imu;
  	vector < vector < float > > x = readfile(filename1); //receives the vector of timestamp, acceleration in x, acceleration in y and acceleration in z
- 	float diff; //sum of the differences between two timestamp vectors
- 	if (filename2 == "") //in case which both vectors are in the same file
- 	{		
- 		y.resize(4);
- 		for(size_t i = 0; i < x[0].size(); i++)
- 		{
- 			y[0].push_back(x[x.size()-4][i]);
- 			y[1].push_back(x[x.size()-3][i]);
- 			y[2].push_back(x[x.size()-2][i]);
- 			y[3].push_back(x[x.size()-1][i]);
- 			diff += x[0][i] - y[0][i];
- 		}
- 		if(x.size() == 7) //in case which the input is timestamp, ax, ay, az, bx, by, bz (same timestamp, there is no need to sincronize)
- 			diff = 0;
- 	}
-	else
- 		y = readfile(filename2);
- 	//SINC TEST
+ 	if (filename2 != "") //in case which both vectors are in the same file
+		{
+ 			y = readfile(filename2);
+ 			x = sinc(x,y);
+ 			y.clear();
+		}	
+	y.resize(4);
+	for(int i = 0; i < x[0].size(); i++)
+	{
+		y[0].push_back(x[x.size()-4][i]);
+		y[1].push_back(x[x.size()-3][i]);
+		y[2].push_back(x[x.size()-2][i]);
+		y[3].push_back(x[x.size()-1][i]);
+	} 
+	writefile("y.test", y);	
+	writefile("x.test", x);
  	for (int i = 0; i < x[0].size();i++)
  	{
 	 	angle = imu.anglebetween(x[1][i], x[2][i], x[3][i], y[1][i], y[2][i], y[3][i]);		
@@ -55,7 +53,7 @@ void calculateanglebetween2vec(string filename1, string filename2, string filena
  	if(filename2!="")
  		filename2.insert(0," and ");
  	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the angle between the two accelerations, and stored in "<<filenameout<<", with the following configuration: timestamp [ms], angle [degree]"<<endl;
- 	
+
 }
 
 vector<vector<float> >transpose(vector<vector<float> > x)
@@ -73,35 +71,82 @@ vector<vector<float> >transpose(vector<vector<float> > x)
 
 vector<vector<float> >sinc(vector<vector<float> > x, vector<vector<float> > y)
 {
-	int i = 0, j = 0, k = 0;
-	vector<vector<float> > result; //output synchronized
-	result.resize(x[0].size()); //allocate memory
+	/*
+	This function synchronizes utilizing the lower frequency signal as parameter to compare with the higher frequency signal
+	the data is merged when the lower signal time stamp is between two timestamps of the higher frequency (j and j+1), so, it 
+	is merged the lower frequency with the higher frequency with index j	
+	*/
+	int j = 0; // higher freq index
+	vector<vector<float> > input_freq_higher;
+	vector<vector<float> > input_freq_lower;
 	vector<vector<float> > xt = transpose(x);
 	vector<vector<float> > yt = transpose(y);
+	vector<vector<float> > result(x.size()+y.size());
+	int N, N_;
+	int countx = 0;
+	int county = 0;
 
 	sort(xt.begin(), xt.end(), [](const vector< float >& a, const vector< float >& b){ return a[0] < b[0]; } );//sort by the first element of the vector(vector) by crescent order
 	sort(yt.begin(), yt.end(), [](const vector< float >& a, const vector< float >& b){ return a[0] < b[0]; } );//sort by the first element of the vector(vector) by crescent order
 
-	while(i < x[0].size() && j < y[0].size())
+	x = transpose(xt);
+	y = transpose(yt);
+	for (int i = 0; i < x[0].size()-1; i++)
 	{
-		if(xt[i][0]==yt[j][0])
+		countx+= x[0][i+1] - x[0][i];
+	}
+	countx /= x[0].size();
+	for (int i = 0; i < y[0].size()-1; i++)
+	{
+		county+= y[0][i+1] - y[0][i];
+	}
+	county /= y[0].size();
+	if(countx > county)
+	{
+		N = y[0].size();
+		N_ = x[0].size();
+		input_freq_lower = y;
+		input_freq_higher = x;
+	}
+	else
+	{
+		N = x[0].size();
+		N_ = y[0].size();
+		input_freq_lower = x;
+		input_freq_higher = y;
+	}
+	for (int i = 0; i< N; i++)
+	{
+		if(input_freq_lower[0][i] == input_freq_higher[0][j])
 		{
-			result[k].resize(xt[0].size() + yt[0].size()); //realocate memory
-			copy (xt[i].begin(), xt[i].begin() + xt[i].size(),result[k].begin());
-			copy (yt[j].begin(), yt[j].begin() + yt[i].size(),result[k].begin() + xt[i].size());
-			k+=1;
-			i+=1;
-			j+=1;
+			for(int m = 0; m < input_freq_lower.size(); m++ )
+					result[m].push_back(input_freq_lower[m][i]);
+			for(int n = 0; n < input_freq_higher.size(); n++ )
+				result[input_freq_lower.size()+n].push_back(input_freq_higher[n][j]);
+			if(j < N_)
+				j++;
+		}
+		else if(input_freq_lower[0][i] < input_freq_higher[0][j])
+		{
+			if(input_freq_lower[0][i] > input_freq_higher[0][j+1])
+			{
+				for(int m = 0; m < input_freq_lower.size(); m++ )
+					result[m].push_back(input_freq_lower[m][i]);
+				for(int n = 0; n < input_freq_higher.size(); n++ )
+					result[input_freq_lower.size()+n].push_back(input_freq_higher[n][j]);
+				if(j < N_)
+					j++;
+			}
 		}
 		else
 		{
-			i+=1;
-			j+=1;
-			//TO DO	
+			if(j < N_)
+				j++;
 		}
+
 	}
-	//writefile("sinc.log",transpose(result));
-	return transpose(result);
+	//writefile("sinc.log",result); //DEBUG
+	return result;
 }
 
 int sgn(double n) 
@@ -273,6 +318,13 @@ void organizeinput(int argc, char * argv [])
 				{
 					calculatetiltang(parameter[2],parameter[4]);
 				}
+				if(parameter[1]=="calculate_normal_vector")
+				{
+					string file2 = "";
+					if(assign[3])
+						file2 = parameter[3];
+					calculatenormalvector(parameter[2],file2,parameter[4]);
+				}
 
 			}
 			else
@@ -299,4 +351,40 @@ void calculatetiltang(string filename1, string filenameout)
  	}
  	writefile(filenameout, storagevec);
  	cout<<"The program extracted the accelerations in "<<filename1<<", estimated the tilt angle and stored in "<<filenameout<<", with the following configuration: timestamp [ms], angle [degree]"<<endl;
+}
+
+void calculatenormalvector(string filename1, string filename2, string filenameout)
+{
+	vector < vector < float> > storagevec(4);
+	vector < vector < float> > y;
+	vector <float> normal;
+	Imu imu;
+ 	vector < vector < float > > x = readfile(filename1); //receives the vector of timestamp, acceleration in x, acceleration in y and acceleration in z
+ 	if (filename2 != "") //in case which both vectors are in the same file
+		{
+ 			y = readfile(filename2);
+ 			x = sinc(x,y);
+ 			y.clear();
+		}	
+	y.resize(4);
+	for(size_t i = 0; i < x[0].size(); i++)
+	{
+		y[0].push_back(x[x.size()-4][i]);
+		y[1].push_back(x[x.size()-3][i]);
+		y[2].push_back(x[x.size()-2][i]);
+		y[3].push_back(x[x.size()-1][i]);
+	} 		 		
+ 	for (int i = 0; i < x[0].size();i++)
+ 	{
+	 	normal = imu.normalvector(x[1][i], x[2][i], x[3][i], y[1][i], y[2][i], y[3][i]);		
+	 	storagevec[0].push_back(x[0][i]);
+	 	storagevec[1].push_back(normal[0]);
+	 	storagevec[2].push_back(normal[1]);
+	 	storagevec[3].push_back(normal[2]);
+ 	}
+ 	writefile(filenameout, storagevec);
+ 	if(filename2!="")
+ 		filename2.insert(0," and ");
+ 	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the normal vector between both accelerations, and stored in "<<filenameout<<", with the following configuration: <timestamp>; <x>; <y>; <z>"<<endl;
+
 }
