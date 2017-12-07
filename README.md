@@ -10,9 +10,11 @@ The present project follows the work of [1].
 
 - [Calculate tilt angle](#calculate-tilt-angle)
 
+- [Calculate screen rotation](#calculate-screen-rotation)
+
 - [Calculate angle between two acceleration vectors data](#calculate-angle-between-two-acceleration-vectors-data)
 
-- [Calculate normal angle of two acceleration vectors data](#Calculate-normal-angle-of-two-acceleration-vectors-data)
+- [Calculate normal vector of two acceleration vectors data](#calculate-normal-vector-of-two-acceleration-vectors-data)
 
 - [Exit](#exit)
 
@@ -75,6 +77,34 @@ Enter the desired command:
 function=calculate_tilt_angle file_in=attitude_exam.log file_out=out.log
 ```
 
+### Calculate screen rotation
+
+The function calculates the angle between the xy plane normal and the local z axis.
+
+
+void screenrotationdetector(string file_in, string file_out);
+
+void screenrotationdetector(string file_in);
+
+* file_in (Required) - The file in which it will be read gravitational acceleration.
+
+* file_out (Optional) - The name of the file that the output will be stored. The pattern is  <timestamp> [ms]; <angle> [degree]
+
+Compiling:
+```markdown
+$ g++ -std=gnu++11 main.cpp imu.cpp functions.cpp -o program
+```
+Execution:
+```markdown
+$ ./program function=calculate_screen_rotation file_in=attitude_exam.log file_out=out.log
+```
+or
+```markdown
+$./programa
+Enter the desired command:
+function=calculate_screen_rotation file_in=attitude_exam.log file_out=out.log
+```
+
 ### Calculate angle between two acceleration vectors data
 
 Calculate angle between two acceleration vectors and record in a file with the following pattern  <timestamp> [ms]; <angle> [degree]
@@ -106,9 +136,9 @@ $./programa
 Enter the desired command:
 function=calculate_angle_between2vec file_in=attitude_exam.log file_in=attitude_exam2.log file_out=out.log
 ```
-### Calculate normal angle of two acceleration vectors data
+### Calculate normal vector of two acceleration vectors data
 
-Calculate normal vector two acceleration vectors and record in a file with the following pattern  <timestamp> [ms]; <x>; <y>; <z>
+Calculate normal vector of two acceleration vectors and record in a file with the following pattern  <timestamp> [ms]; <x>; <y>; <z>
 
 
 void calculatenormalvector(string file_in, string file_in, string file_out);
@@ -139,7 +169,7 @@ function=calculate_normal_vector file_in=attitude_exam.log file_in=attitude_exam
 ```
 
 ### Exit
-The function has the objective of end the program by user command. The programm wait a command until an exit is given.
+The function ends the program by user command. The programm wait a command until another command or an exit command is given.
 
 Compiling:
 ```markdown

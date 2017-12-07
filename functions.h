@@ -14,4 +14,5 @@ vector<vector<float> >transpose(vector<vector<float> > x);	//transpose x
 void organizeinput(int argc, char * argv []); //select the correct function and parameters from terminal or input arguments
 vector < vector <float> >lowpassfilter(vector < vector <float> > x, float wc ); //lowpassfilter, where x is the input for filtering and wc the cutoff frequency
 void calculatenormalvector(string filename1, string filename2, string filenameout); //calculate the normal vector between the vectors of filename1 and filename2, recording in filenameou
+void screenrotationdetector(string filename1, string filenameout); 
 #endif /* FUNCTIONS_H */

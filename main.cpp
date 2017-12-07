@@ -38,7 +38,7 @@ int main(int argc, char * argv []) //receive the argument from terminal or from 
 			i++;		
 		}
 		organizeinput(i,input);
-		cin.ignore(10000, '\n');// ignore next \n, to clean cin.peek;
+		cin.ignore(2, '\n');// ignore next \n, to clean cin.peek;
 	}
 	return 0;
 }

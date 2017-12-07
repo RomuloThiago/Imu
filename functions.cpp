@@ -307,24 +307,30 @@ void organizeinput(int argc, char * argv [])
 						rotation = parameter[5];	 
 					calculaterollpitch(parameter[2],rotation,parameter[4]);
 				}
-				if(parameter[1]=="calculate_angle_between2vec")
+				else if(parameter[1]=="calculate_angle_between2vec")
 				{
 					string file2 = "";
 					if(assign[3])
 						file2 = parameter[3];	 
 					calculateanglebetween2vec(parameter[2],file2,parameter[4]);
 				}
-				if(parameter[1]=="calculate_tilt_angle")
+				else if(parameter[1]=="calculate_tilt_angle")
 				{
 					calculatetiltang(parameter[2],parameter[4]);
 				}
-				if(parameter[1]=="calculate_normal_vector")
+				else if(parameter[1]=="calculate_normal_vector")
 				{
 					string file2 = "";
 					if(assign[3])
 						file2 = parameter[3];
 					calculatenormalvector(parameter[2],file2,parameter[4]);
 				}
+				else if(parameter[1]=="calculate_screen_rotation")
+				{
+					screenrotationdetector(parameter[2],parameter[4]);
+				}
+				else
+					cout<<"Error: The functions was not recognized."<<endl;
 
 			}
 			else
@@ -387,4 +393,19 @@ void calculatenormalvector(string filename1, string filename2, string filenameou
  		filename2.insert(0," and ");
  	cout<<"The program extracted the accelerations in "<<filename1<<filename2<<", estimated the normal vector between both accelerations, and stored in "<<filenameout<<", with the following configuration: <timestamp>; <x>; <y>; <z>"<<endl;
 
+}
+void screenrotationdetector(string filename1, string filenameout)
+{
+	string screen;
+	vector < vector < string> > storagevec(2);
+	Imu imu;
+ 	vector < vector < float > > x = readfile(filename1); //receives the vector of timestamp, acceleration in x, acceleration in y and acceleration in z
+ 	for (int i = 0; i < x[0].size();i++)
+ 	{
+	 	screen = imu.screen(x[1][i], x[2][i], x[3][i]);		
+	 	storagevec[0].push_back(to_string(x[0][i]));
+	 	storagevec[1].push_back(screen);
+ 	}
+ 	writefilestr(filenameout, storagevec);
+ 	cout<<"The program extracted the accelerations in "<<filename1<<", estimated the display orientation and stored in "<<filenameout<<", with the following configuration: <timestamp> , <screen rotation command>"<<endl;
 }
